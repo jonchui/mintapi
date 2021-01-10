@@ -285,26 +285,73 @@ def get_web_driver(email, password, headless=False, mfa_method=None, mfa_token=N
             options=chrome_options,
             executable_path=get_stable_chrome_driver(
                 chromedriver_download_path))
-    driver.get("https://www.mint.com")
-    driver.implicitly_wait(20)  # seconds
-    try:
-        element = driver.find_element_by_link_text("Sign in")
-    except NoSuchElementException:
-        # when user has cookies, a slightly different front page appears
-        driver.implicitly_wait(0)  # seconds
-        element = driver.find_element_by_link_text("Sign in")
-        driver.implicitly_wait(20)  # seconds
-    element.click()
+    driver.get("https://global-zone51.renaissance-go.com/studentportal/entry?t=7804330")
+    # try:
+    #     element = driver.find_element_by_link_text("I'm a Student")
+    # except NoSuchElementException:
+    #     # when user has cookies, a slightly different front page appears
+    #     driver.implicitly_wait(0)  # seconds
+    #     element = driver.find_element_by_link_text("I'm a Student")
+    #     driver.implicitly_wait(20)  # seconds
+    # element.click()
     time.sleep(1)
-    email_input = driver.find_element_by_id("ius-userid")
-    # It's possible that the user clicked "remember me" at some point, causing
-    # the email to already be present. If anything is in the input, clear it
-    # and use the provided email, just to be safe.
-    # email_input.setAttribute("value", "")
-    email_input.clear()
-    email_input.send_keys(email)
-    driver.find_element_by_id("ius-password").send_keys(password)
-    driver.find_element_by_id("ius-sign-in-submit-btn").submit()
+    driver.find_element_by_id("Username").send_keys(email)
+    # # It's possible that the user clicked "remember me" at some point, causing
+    # # the email to already be present. If anything is in the input, clear it
+    # # and use the provided email, just to be safe.
+    # # email_input.setAttribute("value", "")
+    # email_input.clear()
+    # email_input.
+    driver.find_element_by_id("Password").send_keys(password)
+    time.sleep(1)
+    driver.find_element_by_id("btnLogIn").submit()
+    
+    driver.get("https://global-zone51.renaissance-go.com/studentprogress/my-goals-upper-grades")
+    
+    driver.implicitly_wait(4)  # seconds
+    try:    
+        summary = driver.find_element_by_class_name('summary-container')
+        print("Summary content: " + str(summary))
+    except:
+        time.sleep(4)
+        # this means we are in the lower grades plant. so let's get the plan 
+        driver.implicitly_wait(4)  # seconds
+        points = driver.find_element_by_id("point-text").text
+        print("total points: " + points)
+    
+    # try to do a request for upper grades info
+    cookies = {
+        '.AspNetCore.Cookies': 'Y1mB0UnMSQ8np9qb5X-4wFKVGruxziNX87XAIzi9X0hmmmcPbpGwxVBsP6d0yvpKeAf-0Wi-aZ6Ez7-c-CF6QiWme12RXZmAIZgM8DLg_zJwG3Hy9ksMKKMBlLWQmoZNiwBRL_hD9Jcx5hts652r5csN9yGCy8Iq8lfP_GEaeCYNUFb3PbxH52-tuVWW5mhyBhP0tQUVGsxpDbUJ6f2VVU3aGxKbz2Vi_BR_wTFdIhfT9nO2aXdDKC3Fdjg1Yx__q6oAGpqhQ-bHDMDFq5An1YZUGFlHNuZzDVacxOy9BRDs5xsUk6LLK4d0rKqBm9Zu_2jjgQ0vg4RzkaHEcPjjD_2QmOD93yVQ9-IkV2QsjxoMyks2TcvKIYBJ_m6_xr49rtgAtEcJz8FqwLnQtgZ3ID8qoUUUJ-7BAC2Twd3hKN1CXeMyksJ0MxKkHaIzwPNkZ_hTKhZyq-K7qglEoii2CJ8OTzU7Qv2HJlOZlAPK_ipgi2nM_Vx-AV-Q07OERtPpJuNlXrVHlryjyK2MFW5xgh9wxeg0MAOiHfzJWWb937RThT3u4KV5C0P2ZVXfbBJ5R8ZM0bfMmsw0dUbbli_eOqhj638kCOVXLsyh7AYtLXRzarUAvOiJFH0sThHM2bAuD_zU0k-5uBCqcKgUi9Gk8ghaFY8PpYJIvuD_oFhTgmq5K5RR0rh1Xd2LnwEvUnvnpzGpRANtAsh2HDzT6K77DM9t0IaB7ZgbT12HiMinK4EgUvLU8Cbx9PAJfis7L0TXNMIGutpCQWa0ix7kAvz8fdHKqLntB5ILuaF0WkgOEUBp9hFHGsLfzjZ2caPzbkP7P3urR78EbfJlLVGgYpLUB0IQbj0JJwZP6mt8xwntyCgnxX8sE0Sh6AWVQvqObqQ1EALPZiaM0sMZRbefUPeBpjqxGiUW_mGx-xHPnGjLqltGdpLeakdxMCcqTtz-Mn5UWDusbm5Tjv58eXHODSxitOzqwR9DxXgb3uKL8YFRwJ2KrSpZbL5lQmpYam-a7ADR8c1ROBJhDInSu596JdVjOmhA2a0Re5anmbZOjjJctga2rc4LSp8L2JeEMCj1WE68SIOW-PW-qpMPXI_jIhXalvm6kw5KOxQeF3tCDiMTKYffk13KvujFu3BN6fPHl1u7EX8D4qlUNv5F48Du9loRdCpJp1lJmJT3Ifm7BbLyk-p4xJqc5pdDIyu4QaUurjma2fbJvYnySWvky2nQ2h5G-0A1CbAVGtarbNTEG_b7YNEIy1izcxVsofXwBGbkyS0KfIbLii1GvhIDhcpekm28y6gOHi452QTfbn21fVdcQoZEwHHMe_0V-2CE7Eu-0OhjQULfXWpbPofigRuqktShDGoUqd9k2ugwtWiTaU2PWdTZMUPIgeafl4j6suu9uf9XCl74Z2vp7nHXJAUeXVi1pnYPw676BC88F8YZb_NwL434zM1mCNRh8EgnaOMpXznvdmIzAkLLoRQuRSy9WKTQM9r5rT8gTrSHCsgC6qPWodihEWD_moaI0jqWCf-Z8U1GmmtSzPmCw-N7U0f1qXteoVTCQ5MWFFDwYN9dDXlzpB4Ov4uETMvd1h-7UdJkqvjAQHaZ_t91FQq-7-A4um1S6tbXq-MJoFskAE6NRZ5SIJ_qYL29ufzBotnDYHfs3ERIXPrKgswcZ4-Z2dO0fdzO6fCGk2pHdP2rjuhSMQYnyhzzr0ucCzVYv7K_awTEsgngoA_u6irBhgIz6QKtr1aumB3wdP2LQYIz_dul20QLic4jHQunXdp-EHWm2zdLNYbey0w3BY1-7msZ8RdOn1yx6UosXj5HvdsBnYvX-PmjpgCLx89ZS9r0xT3-yC9ZGsV8EYDV-bWdyu4iuNLkWKuhULeNuhwB8x2bHnjuizTvix1Nex2oUwnZPlcZZ2fKRg8GtpWmq7-V-OCbmb5JWqL62T9Oy2zvayxxXgmdbWnYILX86gxkqM-c8vE_wRPMKfVOhxqGnjnDAaA4cscOvVJ-GQZd3pCE8XjK6HzRDQ0KtRXOFc4yIYiLJjKPieks9KYf',
+        '__RequestVerificationToken_L2lkZW50aXR5c2VydmljZQ2': 'U5ChQOh74EWJ6G2J0nOYIzAqukJfRTBs-EJ3aAfRH8xBWrZdvY5-NHsRZ-RNsJjT3m5cKlPZBeCk4LR5dWIhUhQ3d4YHi4Gx35U3_-jC4LU1',
+    }
+    cookies['.AspNetCore.Cookies'] = driver.get_cookie('.AspNetCore.Cookies')['value']
+    cookies['__RequestVerificationToken_L2lkZW50aXR5c2VydmljZQ2'] = driver.get_cookie('__RequestVerificationToken_L2lkZW50aXR5c2VydmljZQ2')['value']
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Pragma': 'no-cache',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en-us',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Host': 'global-zone51.renaissance-go.com',
+        'Origin': 'https://global-zone51.renaissance-go.com',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Mobile/15E148 Safari/604.1',
+        'Referer': 'https://global-zone51.renaissance-go.com/studentprogress/my-goals-upper-grades',
+        'Content-Length': '2968',
+        'Connection': 'keep-alive',
+    }
+
+    data = '{"operationName":"studentGoalSummaryQuery","namedQuery":"","query":"query studentGoalSummaryQuery(\\n $studentId: String,\\n $assignmentTypes: [String]!,\\n $activityTypes: [String]!,\\n $readingSTARAssignmentTypes: [String]!,\\n $readingSTARActivityTypes: [String]!,\\n $mathSTARAssignmentTypes: [String]!,\\n $mathSTARActivityTypes: [String]!,\\n $startDate: String!,\\n $endDate: String!,\\n $fictionNonFictionAssignmentTypes: [String]!,\\n $fictionNonFictionActivityTypes: [String]!\\n ) {\\n district {\\n students(ids: [$studentId]) {\\n id\\n formattedName(format: LAST_FIRST)\\n assignmentSummary(assignmentTypes: $assignmentTypes, activityTypes: $activityTypes, wordCountActivityTypes: $activityTypes, startDate: $startDate, endDate: $endDate) {\\n countEngagedMinutes\\n averageDifficultyLevel\\n countActivitiesTaken\\n countPassedOrCompleted\\n countWordsRead\\n averageLexile\\n averagePercentCorrect\\n countEngagementPointsAchieved\\n }\\n fictionNonFictionAssignment: assignmentSummary(assignmentTypes: $fictionNonFictionAssignmentTypes, activityTypes: $fictionNonFictionActivityTypes, startDate: $startDate, endDate: $endDate) {\\n percentFiction,\\n percentNonFiction\\n }\\n latestSTARReadingActivity: activities(limit: 1, assignmentTypes: $readingSTARAssignmentTypes, activityTypes: $readingSTARActivityTypes, startDate: $startDate, endDate: $endDate) {\\n completedDate\\n score(sourceScale:SCLTYP_RASCH, targetScale:SCLTYP_ENTERPRISE) {\\n value\\n displayValue\\n targetConversionSucceeded\\n }\\n lexileRange {\\n upper\\n lower\\n displayValue\\n }\\n zpdRange\\n }\\n latestSTARMathActivity: activities(limit: 1, assignmentTypes: $mathSTARAssignmentTypes, activityTypes: $mathSTARActivityTypes, startDate: $startDate, endDate: $endDate) {\\n completedDate\\n score(sourceScale:SCLTYP_RASCH, targetScale:SCLTYP_ENTERPRISE) {\\n value\\n displayValue\\n targetConversionSucceeded\\n }\\n }\\n }\\n }\\n}","variables":{"studentId":"gs_9b93b175-15c2-46ba-a17b-cc7c30fc8e48","startDate":"2021-01-04","endDate":"2021-03-19","assignmentTypes":["ASNTYP_ARLS","ASNTYP_AROR","ASNTYP_ARRP","ASNTYP_ARVP","ASNTYP_AR360AQ","ASNTYP_AR360ARQ"],"activityTypes":["ATVTYP_AR","ATVTYP_LITERACYSKILLSQUIZ","ATVTYP_OTHERREADINGQUIZ","ATVTYP_READINGPRACTICEQUIZ","ATVTYP_VOCABULARYPRACTICEQUIZ","ATVTYP_AR360READ","ATVTYP_ARTICLEQUIZ"],"fictionNonFictionAssignmentTypes":["ASNTYP_AR","ASNTYP_AROR","ASNTYP_ARRP","ASNTYP_AR360ARQ","ASNTYP_AR360ASPQ"],"fictionNonFictionActivityTypes":["ATVTYP_READINGPRACTICEQUIZ","ATVTYP_OTHERREADINGQUIZ","ATVTYP_ARTICLEQUIZ"],"readingSTARAssignmentTypes":["ASNTYP_SRENE"],"readingSTARActivityTypes":["ATVTYP_SRENE"],"mathSTARAssignmentTypes":["ASNTYP_SMENE"],"mathSTARActivityTypes":["ATVTYP_SMENE"]}}'
+
+    response = requests.post('https://global-zone51.renaissance-go.com/studentprogress/api/GraphQl/GetStudentData/clientId/7804330/userId/gs_9b93b175-15c2-46ba-a17b-cc7c30fc8e48', headers=headers, cookies=cookies, data=data)
+
+    import json
+    d = json.loads(response.content)
+    summary = d['data']['district']['students'][0]['assignmentSummary']
+    print("Total words read: " + str(summary['countWordsRead']))
+    for x in summary.keys():
+        print(x + " : " + str(summary[x]))
 
     # Wait until logged in, just in case we need to deal with MFA.
     while not driver.current_url.startswith(
